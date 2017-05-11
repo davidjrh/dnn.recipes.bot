@@ -67,7 +67,7 @@ public class RootDialog : IDialog<object>
             "Recipes Bot",
             "Your agent that allows you to cook Liquid Content recipes",
             options, 
-            new[] { "https://cdn.pixabay.com/photo/2017/03/17/10/29/breakfast-2151201_960_720.jpg" });
+            new[] { "https://raw.githubusercontent.com/davidjrh/dnn.recipes.bot/master/dnnrecipes.jpg" });
 
         await context.PostAsync(reply);
 
@@ -145,7 +145,7 @@ public class RootDialog : IDialog<object>
             Text = it.Description,
             Images = new List<CardImage> {
                 new CardImage(string.IsNullOrEmpty(it.Details.ImageUrl) ? 
-                    "https://raw.githubusercontent.com/davidjrh/mytrash/master/no-image-icon.png" : 
+                    "https://raw.githubusercontent.com/davidjrh/dnn.recipes.bot/master/no-image-icon.png" : 
                     it.Details.ImageUrl, it.Name)
             },
             Buttons = new List<CardAction>
