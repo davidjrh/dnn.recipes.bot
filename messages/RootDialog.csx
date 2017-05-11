@@ -3,12 +3,14 @@
 #load "RecipeForm.csx"
 
 using System;
+using System.Configuration;
 using System.Net;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.FormFlow;
 using Microsoft.Bot.Connector;
+
 
 // For more information about this template visit http://aka.ms/azurebots-csharp-basic
 [Serializable]
@@ -23,6 +25,9 @@ public class RootDialog : IDialog<object>
     private List<Recipe> Recipes { get; set; }
     private RecipeType RecipeType { get; set; }
 
+    private static string APIEndpoint => System.Configuration.ConfigurationManager.AppSettings["EvoqAPIEndpoint"];
+    private static string APIKey => System.Configuration.ConfigurationManager.AppSettings["EvoqAPIKey"];
+    
     public Task StartAsync(IDialogContext context)
     {
         try
@@ -184,11 +189,10 @@ public class RootDialog : IDialog<object>
         if (recipeType == null) return null;
         var parsedIngredients = ParseIngredients(ingredients);
         var request = (HttpWebRequest)WebRequest.Create(
-          $"https://qa.dnnapi.com/content/api/contentitems?contenttypeid={recipeType.Id}&searchtext={WebUtility.UrlEncode(parsedIngredients)}");
+          $"{APIEndpoint}/content/api/contentitems?contenttypeid={recipeType.Id}&searchtext={WebUtility.UrlEncode(parsedIngredients)}");
         request.Method = "GET";
         request.ContentType = "application/json";
         request.Headers = new WebHeaderCollection();
-        var APIKey = "901e5d4142b94d34e29c7d68e36fbf39";
         request.Headers.Add("Authorization", $"Bearer {APIKey}");
         using (var response = await request.GetResponseAsync() as HttpWebResponse)
         {
@@ -209,11 +213,10 @@ public class RootDialog : IDialog<object>
     static public async Task<RecipeType> GetRecipeTypeAsync()
     {
         var request = (HttpWebRequest)WebRequest.Create(
-          $"https://qa.dnnapi.com/content/api/contenttypes?searchtext=recipe");
+          $"{APIEndpoint}/content/api/contenttypes?searchtext=recipe");
         request.Method = "GET";
         request.ContentType = "application/json";
         request.Headers = new WebHeaderCollection();
-        var APIKey = "901e5d4142b94d34e29c7d68e36fbf39";
         request.Headers.Add("Authorization", $"Bearer {APIKey}");
         using (var response = await request.GetResponseAsync() as HttpWebResponse)
         {
