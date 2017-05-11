@@ -25,8 +25,8 @@ public class RootDialog : IDialog<object>
     private List<Recipe> Recipes { get; set; }
     private RecipeType RecipeType { get; set; }
 
-    private static string APIEndpoint => System.Configuration.ConfigurationManager.AppSettings["EvoqAPIEndpoint"];
-    private static string APIKey => System.Configuration.ConfigurationManager.AppSettings["EvoqAPIKey"];
+    private static string APIEndpoint => ConfigurationManager.AppSettings["EvoqAPIEndpoint"];
+    private static string APIKey => ConfigurationManager.AppSettings["EvoqAPIKey"];
     
     public Task StartAsync(IDialogContext context)
     {
