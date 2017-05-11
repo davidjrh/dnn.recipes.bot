@@ -35,25 +35,11 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
             switch (activity.GetActivityType())
             {
                 case ActivityTypes.Message:
-                    using (var scope = DialogModule.BeginLifetimeScope(Conversation.Container, activity))
-                    {
-                        if (activity.Text != null)
-                        {
-                            var msg = activity.Text.ToLowerInvariant().Trim();
-                            if (msg == "start over" || msg == "exit" || msg == "quit" || msg == "done" || msg == "start again" || msg == "restart" || msg == "leave" || msg == "reset")
-                            {  
-                                //var botData = scope.Resolve<IBotData>();
-                                //await botData.LoadAsync(default(CancellationToken));
-                                //await botData.FlushAsync(default(CancellationToken));
-                                //var stack = scope.Resolve<IDialogStack>();
-                                //stack.Reset();
-                            }
-                        }
-
-                        await Conversation.SendAsync(activity, () => new RootDialog());
-                    }
-
-                    //await Conversation.SendAsync(activity, () => new RootDialog());
+                    var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                    var isTypingReply = activity.CreateReply();
+                    isTypingReply.Type = ActivityTypes.Typing;
+                    await connector.Conversations.ReplyToActivityAsync(isTypingReply);
+                    await Conversation.SendAsync(activity, () => new RootDialog());
                     break;
                 case ActivityTypes.ConversationUpdate:
                     var client = new ConnectorClient(new Uri(activity.ServiceUrl));
