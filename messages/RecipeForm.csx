@@ -10,8 +10,8 @@ public class RecipeForm
     [Prompt("Which {&} do you have?")]
     public string Ingredients { get; set; }
 
-    [Prompt("Please select the type of recype you want to cook {||}")]
-    public RecipeTypeEnum RecypeType { get; set; }
+    [Prompt("Please select the type of recipe you want to cook {||}")]
+    public RecipeTypeEnum RecipeType { get; set; }
 
     public static IForm<RecipeForm> BuildForm()
     {
